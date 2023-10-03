@@ -4,6 +4,7 @@ use std::io::Error;
 mod aes;
 mod rc4;
 
+
 pub fn cmd_aes128(decrypt: bool, key: &str, iv: &str, path_in: &str, path_out: &str) -> Result<bool, Error> {
 	return if decrypt {
 		aes::decrypt_128(key, iv, path_in, path_out)

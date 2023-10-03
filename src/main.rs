@@ -7,12 +7,12 @@ use clap::Parser;
 mod args;
 mod style;
 mod encoding;
-mod encryption;
+mod cipher;
 
 use args::*;
 use style::*;
 use encoding::*;
-use encryption::*;
+use cipher::*;
 
 
 fn _main(cli_args: VeilArgs) -> Result<i32, Error> {
