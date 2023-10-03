@@ -1,0 +1,26 @@
+[package]
+name = "veil"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+clap = { version = "4.4.6", features = ["derive"] }
+colored = "2.0"
+
+hex = "0.4.3"
+base64 = "0.21.4"
+base32 = "0.4.0"
+base85 = "2.0.0"
+ascii85 = "0.2.1"
+
+rand = "0.8.5"
+libaes = "0.7.0"
+rust-crypto = "0.2.36"
+
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
