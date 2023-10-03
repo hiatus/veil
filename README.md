@@ -1,22 +1,26 @@
 # veil
-A tookit for encoding and encrypting data. This tool gathers some of the most common encoding
-schemes and cryptographic ciphers in a single, cross-compilable binary.
+A tookit for manipulating data. `veil` gathers common algorithms, encoding schemes and cryptographic ciphers in a single, cross-compilable binary.
 
 
-## Encoding Schemes
+## Features
+### Bitwise Operations
+- AND
+- OR
+- XOR
+
+### Encoding Schemes
 - Hex
 - Base32
 - Base64
 - Base85
 - ASCII85
 
-
-## Cryptographic Ciphers
+### Cryptographic Ciphers
 - AES (128, 192 and 256 bit keys)
 - RC4
 
 
-## Compiling
+## Compilation
 - Just `git clone` and `cargo build`
 ```
 $ git clone https://github.com/hiatus/veil

@@ -10,6 +10,13 @@ pub struct VeilArgs {
 
 #[derive(Debug, Subcommand)]
 pub enum VeilCommand {
+	/// Apply a bitwise AND mask on a file (or stdin)
+	And(VeilCommandAnd),
+	/// Apply a bitwise OR mask on a file (or stdin)
+	Or(VeilCommandOr),
+	/// Apply a bitwise XOR mask on a file (or stdin)
+	Xor(VeilCommandXor),
+
 	/// Encode or decode a file (or stdin) in hex
 	Hex(VeilCommandHex),
 	/// Encode or decode a file (or stdin) in Base32
@@ -29,6 +36,39 @@ pub enum VeilCommand {
 	Aes256(VeilCommandAes256),
 	/// Encrypt or decrypt a file (or stdin) using RC4
 	Rc4(VeilCommandRc4)
+}
+
+#[derive(Debug, Args)]
+pub struct VeilCommandAnd {
+	#[clap(short, long, required = true, help = "Byte mask (hex)")]
+	pub mask: String,
+	#[clap(short, long, required = false, help = "Write output to a file")]
+	pub output: Option<String>,
+
+	#[clap(required = false, help = "Read input from a file")]
+	pub file: Option<String>
+}
+
+#[derive(Debug, Args)]
+pub struct VeilCommandOr {
+	#[clap(short, long, required = true, help = "Byte mask (hex)")]
+	pub mask: String,
+	#[clap(short, long, required = false, help = "Write output to a file")]
+	pub output: Option<String>,
+
+	#[clap(required = false, help = "Read input from a file")]
+	pub file: Option<String>
+}
+
+#[derive(Debug, Args)]
+pub struct VeilCommandXor {
+	#[clap(short, long, required = true, help = "Byte mask (hex)")]
+	pub mask: String,
+	#[clap(short, long, required = false, help = "Write output to a file")]
+	pub output: Option<String>,
+
+	#[clap(required = false, help = "Read input from a file")]
+	pub file: Option<String>
 }
 
 #[derive(Debug, Args)]

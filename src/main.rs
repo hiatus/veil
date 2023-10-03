@@ -6,17 +6,41 @@ use clap::Parser;
 // Local
 mod args;
 mod style;
+mod bitwise;
 mod encoding;
 mod cipher;
 
 use args::*;
 use style::*;
+use bitwise::*;
 use encoding::*;
 use cipher::*;
 
 
 fn _main(cli_args: VeilArgs) -> Result<i32, Error> {
     match cli_args.command {
+        // Bitwise operations
+        VeilCommand::And(and_args) => {
+            let output: String = if and_args.output.is_some() { and_args.output.unwrap() } else { String::from("-") };
+            let file: String = if and_args.file.is_some() { and_args.file.unwrap() } else { String::from("-") };
+
+            cmd_and(&and_args.mask, &file, &output)?;
+        },
+
+        VeilCommand::Or(or_args) => {
+            let output: String = if or_args.output.is_some() { or_args.output.unwrap() } else { String::from("-") };
+            let file: String = if or_args.file.is_some() { or_args.file.unwrap() } else { String::from("-") };
+
+            cmd_or(&or_args.mask, &file, &output)?;
+        },
+
+        VeilCommand::Xor(xor_args) => {
+            let output: String = if xor_args.output.is_some() { xor_args.output.unwrap() } else { String::from("-") };
+            let file: String = if xor_args.file.is_some() { xor_args.file.unwrap() } else { String::from("-") };
+
+            cmd_xor(&xor_args.mask, &file, &output)?;
+        },
+
         // Encoding
         VeilCommand::Hex(hex_args) => {
             let output: String = if hex_args.output.is_some() { hex_args.output.unwrap() } else { String::from("-") };
