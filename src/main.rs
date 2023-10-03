@@ -108,6 +108,15 @@ fn _main(cli_args: VeilArgs) -> Result<i32, Error> {
             let file: String = if rc4_args.file.is_some() { rc4_args.file.unwrap() } else { String::from("-") };
 
             cmd_rc4(&rc4_args.key, skip, &file, &output)?;
+        },
+
+        VeilCommand::Chacha20(chacha20_args) => {
+            let nonce = if chacha20_args.nonce.is_some() { chacha20_args.nonce.unwrap() } else { String::new() };
+            let skip: usize = if chacha20_args.skip.is_some() { chacha20_args.skip.unwrap() } else { 0 };
+            let output: String = if chacha20_args.output.is_some() { chacha20_args.output.unwrap() } else { String::from("-") };
+            let file: String = if chacha20_args.file.is_some() { chacha20_args.file.unwrap() } else { String::from("-") };
+
+            cmd_chacha20(&chacha20_args.key, &nonce, skip, &file, &output)?;
         }
     }
 

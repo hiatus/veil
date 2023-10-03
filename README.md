@@ -18,6 +18,7 @@ A tookit for manipulating data. `veil` gathers common algorithms, encoding schem
 ### Cryptographic Ciphers
 - AES (128, 192 and 256 bit keys)
 - RC4
+- ChaCha20
 
 
 ## Compilation

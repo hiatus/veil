@@ -35,7 +35,9 @@ pub enum VeilCommand {
 	/// Encrypt or decrypt a file (or stdin) using AES256 in CBC mode
 	Aes256(VeilCommandAes256),
 	/// Encrypt or decrypt a file (or stdin) using RC4
-	Rc4(VeilCommandRc4)
+	Rc4(VeilCommandRc4),
+	/// Encrypt or decrypt a file (or stdin) using ChaCha20
+	Chacha20(VeilCommandChacha20)
 }
 
 #[derive(Debug, Args)]
@@ -175,6 +177,21 @@ pub struct VeilCommandAes256 {
 pub struct VeilCommandRc4 {
 	#[clap(short, long, required = true, help = "Encryption key (hex)")]
 	pub key: String,
+	#[clap(short, long, required = false, help = "Skip the first [skip] stream bytes")]
+	pub skip: Option<usize>,
+	#[clap(short, long, required = false, help = "Write output to a file")]
+	pub output: Option<String>,
+
+	#[clap(required = false, help = "Read input from a file")]
+	pub file: Option<String>
+}
+
+#[derive(Debug, Args)]
+pub struct VeilCommandChacha20 {
+	#[clap(short, long, required = true, help = "Encryption key (32 bytes, hex)")]
+	pub key: String,
+	#[clap(short, long, required = false, help = "Encryption nonce (12 bytes, hex)")]
+	pub nonce: Option<String>,
 	#[clap(short, long, required = false, help = "Skip the first [skip] stream bytes")]
 	pub skip: Option<usize>,
 	#[clap(short, long, required = false, help = "Write output to a file")]
