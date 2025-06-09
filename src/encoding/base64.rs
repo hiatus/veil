@@ -1,78 +1,46 @@
-use std::fs;
+use std::fs::File;
 use std::io;
-use std::io::Error;
 use std::str;
 
-use base64::{engine::general_purpose, Engine as _};
+use base64::{engine::general_purpose::STANDARD, read::DecoderReader, write::EncoderWriter};
 
-const SIZE_BLOCK: usize = 4096;
-
-pub fn encode(path_in: &str, path_out: &str) -> Result<bool, Error> {
-    let (mut stdin_read, mut file_read);
-    let (mut stdout_write, mut file_write);
-
-    let reader: &mut dyn io::Read = if path_in == "-" {
-        stdin_read = io::stdin();
-        &mut stdin_read
+pub fn encode(path_in: &str, path_out: &str) -> Result<bool, io::Error> {
+    let mut reader: Box<dyn io::Read> = if path_in == "-" {
+        Box::new(io::stdin().lock())
     } else {
-        file_read = fs::File::open(path_in)?;
-        &mut file_read
+        Box::new(File::open(path_in)?)
     };
 
-    let writer: &mut dyn io::Write = if path_out == "-" {
-        stdout_write = io::stdout();
-        &mut stdout_write
+    let writer: Box<dyn io::Write> = if path_out == "-" {
+        Box::new(io::stdout().lock())
     } else {
-        file_write = fs::File::create(path_out)?;
-        &mut file_write
+        Box::new(File::create(path_out)?)
     };
 
-    let mut buffer = [0u8; SIZE_BLOCK];
+    let mut encoder = EncoderWriter::new(writer, &STANDARD);
 
-    while let Ok(n) = reader.read(&mut buffer) {
-        if n == 0 {
-            break;
-        }
-
-        let encoded = general_purpose::STANDARD.encode(&buffer[..n]);
-
-        writer.write_all(encoded.as_bytes())?;
-    }
+    io::copy(&mut reader, &mut encoder)?;
+    encoder.finish()?;
 
     Ok(true)
 }
 
-pub fn decode(path_in: &str, path_out: &str) -> Result<bool, Error> {
-    let (mut stdin_read, mut file_read);
-    let (mut stdout_write, mut file_write);
-
-    let reader: &mut dyn io::Read = if path_in == "-" {
-        stdin_read = io::stdin();
-        &mut stdin_read
+pub fn decode(path_in: &str, path_out: &str) -> Result<bool, io::Error> {
+    let reader: Box<dyn io::Read> = if path_in == "-" {
+        Box::new(io::stdin().lock())
     } else {
-        file_read = fs::File::open(path_in)?;
-        &mut file_read
+        Box::new(File::open(path_in)?)
     };
 
-    let writer: &mut dyn io::Write = if path_out == "-" {
-        stdout_write = io::stdout();
-        &mut stdout_write
+    let mut writer: Box<dyn io::Write> = if path_out == "-" {
+        Box::new(io::stdout().lock())
     } else {
-        file_write = fs::File::create(path_out)?;
-        &mut file_write
+        Box::new(File::create(path_out)?)
     };
 
-    let mut buffer = [0u8; SIZE_BLOCK];
+    let mut decoder = DecoderReader::new(reader, &STANDARD);
 
-    while let Ok(n) = reader.read(&mut buffer) {
-        if n == 0 {
-            break;
-        }
-
-        let decoded = general_purpose::STANDARD.decode(&buffer[..n]).unwrap();
-
-        writer.write_all(&decoded)?;
-    }
+    io::copy(&mut decoder, &mut writer)?;
 
     Ok(true)
 }
